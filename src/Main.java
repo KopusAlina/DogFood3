@@ -7,7 +7,10 @@ import java.util.Set;
 public class Main {
 
     // Список потенциально аллергенных ингредиентов
-    private static final Set<String> ALLERGENS = Set.of("пшеница", "кукуруза", "соя", "молоко", "яйца", "рыба", "курица");
+    // Используем Set для хранения аллергенов, так как это позволяет избежать дублирования и ускоряет поиск
+    private static final Set<String> ALLERGENS = Set.of("пшеница", "кукуруза", "соя", "молоко", "яйца",
+            "курица", "конина", "белок птицы", "ячмень", "свинина", "белок кукурузы", "жир птицы",
+            "индейка", "цыпленок", "утка", "кролик", "телятина", "ягненок", "птица", "куриный");
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -34,7 +37,7 @@ public class Main {
             System.out.println(allergensInBoth);
         }
 
-        System.out.println("Совпадающие ингредиенты:");
+        System.out.println("Совпадающие ингредиенты в данных кормах:");
         if (commonIngredients.isEmpty()) {
             System.out.println("Совпадений не найдено.");
         } else {
@@ -54,23 +57,35 @@ public class Main {
         return ingredients;
     }
 
-    // Метод для поиска аллергенов в составах
+    // Метод для поиска аллергенов
     private static Set<String> findAllergens(List<String> ingredients1, List<String> ingredients2) {
         Set<String> allergens = new HashSet<>();
 
+        // Проверяем ингредиенты первого корма
         for (String ingredient : ingredients1) {
-            if (ALLERGENS.contains(ingredient)) {
+            if (containsAllergen(ingredient)) {
                 allergens.add(ingredient);
             }
         }
 
+        // Проверяем ингредиенты второго корма
         for (String ingredient : ingredients2) {
-            if (ALLERGENS.contains(ingredient)) {
+            if (containsAllergen(ingredient)) {
                 allergens.add(ingredient);
             }
         }
 
         return allergens;
+    }
+
+    // Метод для проверки, содержит ли ингредиент какой-либо из аллергенов
+    private static boolean containsAllergen(String ingredient) {
+        for (String allergen : ALLERGENS) {
+            if (ingredient.contains(allergen)) {  // Поиск подстроки аллергена в ингредиенте
+                return true;
+            }
+        }
+        return false;
     }
 
     // Метод для поиска совпадающих ингредиентов
